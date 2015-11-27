@@ -1,0 +1,6 @@
+/************************************************************
+ * File name: CMechanism.chf
+ *            member functions of class CMechanism
+ ************************************************************/
+#include <mechanism.h>
+
