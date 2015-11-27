@@ -3,4 +3,50 @@
  *            member functions of class CMechanism
  ************************************************************/
 #include <mechanism.h>
+/******************************************
+ * Constructor of class CQuickReturn
+ ******************************************/
+CQuickReturn::CQuickReturn() 
+{
+	// setup default lengths (Meters)
+	r_length[1] = .05;
+	r_length[2] = .01;
+	r_length[3] = .03;
+	r_length[4] = .045;
+	r_length[5] = .08;
+	r_length[7] = .03;
+
+	// setup default phase angles (radians)
+	theta[1] = M_DEG2RAD(10); //converted to radians
+
+	//intialize SI units as default
+	m_uscunit = 0; 
+
+	// add default angular velocites and force and number of points for animation
+
+	
+
+}
+
+
+
+
+
+/******************************************
+ * uscUnit()
+ *
+ * Set the units preference.
+ *
+ * Arguments: unit ... true for USC units
+ *                     false for SI units
+ * this function derived from CQuickReturn.chf by Harry Chang
+ ******************************************/
+void CMechanism::uscUnit(bool unit)
+{
+   m_uscunit = unit;
+   if(m_uscunit)
+      printf("\n!! You're using ENGLISH UNITS !!\n\n");
+   else
+      printf("\n!! You're using SI UNITS !!\n\n");
+}
 
