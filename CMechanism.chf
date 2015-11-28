@@ -24,13 +24,66 @@ CQuickReturn::CQuickReturn()
 
 	// add default angular velocites and force and number of points for animation
 
-	
 
+
+}
+/***************************************************************
+ * setLinks()
+ *
+ * Set the Length for each link and angle between ground pins.
+ *
+ * Arguments: r1  ... length Link 1
+ *            r2  ...    "     "  2
+ *            r4  ...    "     "  4
+ *            r5  ...    "     "  5
+ *            r7  ...    "     "  7
+ *            theta 1 ... angle of Link 1
+ ***************************************************************/
+void CQuickReturn::setLinks(double r1, r2, r3,r4, r5, r7, theta1)
+{
+	//check r1 > r2
+	if (r1 < r2){
+		printf("r1 must be greater than r2\n");
+		exit(1);
+	}
+
+	// check r2+r3 < r1 + r4
+	if ((r2+r3) > (r1 + r4){
+		printf("r2+r3 must be less than r1+r4\n");
+		exit(1);
+	}
+
+	if (theta1 > 90 || theta1 < 0){
+		printf("theta1 must be between 0 and 90 degrees");
+		exit(1)
+	}
+
+
+	// setup default lengths (Meters)
+	r_length[1] = r1;
+	r_length[2] = r2;
+	r_length[3] = r3;
+	r_length[4] = r4;
+	r_length[5] = r5;
+	r_length[7] = r7;
+
+	// setup default phase angles (radians)
+	theta[1] = M_DEG2RAD(theta1); //converted to radians
+
+	// if English units
+   if(m_uscunit)
+   {
+      r_length[1] *= M_FT2M;     // ft --> m
+      r_length[2] *= M_FT2M;     // ft --> m
+      r_length[4] *= M_FT2M;     // ft --> m
+      r_length[5] *= M_FT2M;     // ft --> m
+      r_length[7] *= M_FT2M;     // ft --> m
+   }
 }
 
 
 
-
+}
 
 /******************************************
  * uscUnit()
