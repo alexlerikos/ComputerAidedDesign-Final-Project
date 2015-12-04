@@ -1,105 +1,298 @@
 /************************************************************
  * File name: CMechanism.chf
- *            member functions of class CMechanism
  ************************************************************/
 #include <mechanism.h>
-/******************************************
- * Constructor of class CQuickReturn
- ******************************************/
-CQuickReturn::CQuickReturn() 
+
+void CMechanism::m_initialize(void) 
 {
-	// setup default lengths (Meters)
-	r_length[1] = .05;
-	r_length[2] = .01;
-	r_length[3] = .03;
-	r_length[4] = .045;
-	r_length[5] = .08;
-	r_length[7] = .03;
 
-	// setup default phase angles (radians)
-	theta[1] = M_DEG2RAD(10); //converted to radians
+    /* defaults */
+    m_r[1] = 5.0, 
+    m_r[2] = 1.0,     
+    m_r[3] = 3.0, 
+    m_r[4] = 4.5, 
+    m_r[5] = 8.0;
+    m_r[7] = 3.0;
 
-	//intialize SI units as default
-	m_uscunit = 0; 
+    m_theta[1] = 0; 
+    m_omega[1] = 0;
+    m_omega[1] = 0;
 
-	// add default angular velocites and force and number of points for animation
-
-
-
+    m_uscunit = 0;            
 }
+
+/******************************************
+ * Constructor of class CMechanism
+ ******************************************/
+CMechanism::CMechanism() 
+{
+   m_initialize();
+}
+
+/******************************************
+ * Destructor of class CMechanism
+ ******************************************/
+CMechanism::~CMechanism() 
+{}
+
 /***************************************************************
  * setLinks()
- *
- * Set the Length for each link and angle between ground pins.
- *
- * Arguments: r1  ... length Link 1
- *            r2  ...    "     "  2
- *            r4  ...    "     "  4
- *            r5  ...    "     "  5
- *            r7  ...    "     "  7
- *            theta 1 ... angle of Link 1
  ***************************************************************/
-void CQuickReturn::setLinks(double r1, r2, r3,r4, r5, r7, theta1)
+void CMechanism::setLinks(double r1, r2, r3, r4, r5, r7, rp, theta1, beta)
 {
-	//check r1 > r2
-	if (r1 < r2){
-		printf("r1 must be greater than r2\n");
-		exit(1);
-	}
 
-	// check r2+r3 < r1 + r4
-	if ((r2+r3) > (r1 + r4){
-		printf("r2+r3 must be less than r1+r4\n");
-		exit(1);
-	}
+    m_r[1] = r1;
+    m_r[2] = r2;
+    m_r[3] = r3;
+    m_r[4] = r4;
+    m_r[5] = r5;
+    m_r[7] = r7;
+    m_rp = rp;
+    m_theta[1] = theta1;
+    m_beta = beta;
 
-	if (theta1 > 90 || theta1 < 0){
-		printf("theta1 must be between 0 and 90 degrees");
-		exit(1)
-	}
-
-
-	// setup default lengths (Meters)
-	r_length[1] = r1;
-	r_length[2] = r2;
-	r_length[3] = r3;
-	r_length[4] = r4;
-	r_length[5] = r5;
-	r_length[7] = r7;
-
-	// setup default phase angles (radians)
-	theta[1] = M_DEG2RAD(theta1); //converted to radians
-
-	// if English units
-   if(m_uscunit)
-   {
-      r_length[1] *= M_FT2M;     // ft --> m
-      r_length[2] *= M_FT2M;     // ft --> m
-      r_length[4] *= M_FT2M;     // ft --> m
-      r_length[5] *= M_FT2M;     // ft --> m
-      r_length[7] *= M_FT2M;     // ft --> m
-   }
-}
-
-
-
+    if(m_uscunit)
+    {
+        m_r[1] *= M_FT2M;     // ft --> m
+        m_r[2] *= M_FT2M;     // ft --> m
+        m_r[3] *= M_FT2M;     // ft --> m
+        m_r[4] *= M_FT2M;     // ft --> m
+        m_r[5] *= M_FT2M;     // ft --> m
+        m_r[7] *= M_FT2M;     // ft --> m
+        m_rp *= M_FT2M;       // ft --> m
+    }
 }
 
 /******************************************
  * uscUnit()
- *
- * Set the units preference.
- *
- * Arguments: unit ... true for USC units
- *                     false for SI units
- * this function derived from CQuickReturn.chf by Harry Chang
  ******************************************/
 void CMechanism::uscUnit(bool unit)
 {
    m_uscunit = unit;
    if(m_uscunit)
-      printf("\n!! You're using ENGLISH UNITS !!\n\n");
+      printf("\n on ENGLISH Units\n\n");
    else
-      printf("\n!! You're using SI UNITS !!\n\n");
+      printf("\n on SI Units\n\n");
 }
 
+/***************************************************************
+ * calcPosition()
+ ***************************************************************/
+void CMechanism::calcPosition(double theta2)
+{
+    double complex z;
+    double x1, x2, x3, x4;
+    
+    m_theta[2] = theta2;
+    
+    // Determine theta3 and theta4
+    z = polar(m_r[1], m_theta[1]) - polar(m_r[2], theta2);
+    complexsolveRR(m_r[3], -m_r[4], z, x1, x2, x3, x4);
+    
+    // First set of solutions
+    m_theta[3] = x1;
+    m_theta[4] = x2;
+    
+    // Find solutions for r5 and r6 : Circuit 1
+    complexsolvePR(M_PI/2, -m_r[5], polar(m_r[2], m_theta[2]) + polar(m_r[3], m_theta[3]) - polar(m_r[1], m_theta[1]) -  polar(m_r[7], 0), x1, x2, x3, x4);
+    m_r[8] = x1;
+    m_theta[5] = x2;
+    
+    Pp = polar(m_r[2], m_theta[2]) + polar(m_rp, m_theta[3] + m_beta);
+    Bp = polar(m_r[2], m_theta[2]) + polar(m_r[3], m_theta[3]);
+    Cp = polar(m_r[1], m_theta[1]) + polar(m_r[7], 0) + polar(m_r[8], M_PI/2);
+}
+
+/*****************************************************************
+ * AngPosition()
+ *****************************************************************/
+double CMechanism::AngPosition(double theta2, int link)
+{
+   double output;
+   calcPosition(theta2);
+
+   switch(link)
+{
+    case LINK_1:
+        output = m_theta[1];
+        break;
+    case LINK_2:
+        output = m_theta[2];
+        break;
+    case LINK_3:
+        output = m_theta[3];
+        break;
+    case LINK_4:
+        output = m_theta[4];
+        break;
+    case LINK_5:
+        output = m_theta[5];
+        break;
+}
+   return output;
+}
+
+/***************************************************************
+ * calcVelocity()
+ ***************************************************************/
+void CMechanism::calcVelocity(double theta2, omega2)
+{
+    double x1, x2;
+    
+    m_theta[2] = theta2;
+    m_omega[2] = omega2;
+
+    m_omega[3] = -(m_r[2]/m_r[3])*(sin(m_theta[2] - m_theta[4])/sin(m_theta[3] - m_theta[4])) * m_omega[2];
+    m_omega[4] =  (m_r[2]/m_r[4])*(sin(m_theta[2] - m_theta[3])/sin(m_theta[4] - m_theta[3])) * m_omega[2];  
+    
+    complexsolvePP(M_PI/2, m_theta[5], polar(m_r[4]*m_omega[4],m_theta[4]), x1, x2);
+    Cv = x1;
+    m_omega[5] = x2/m_r[5];
+
+}
+
+/*****************************************************************
+ * AngVelocity()
+ *****************************************************************/
+double CMechanism::AngVelocity(double theta2, omega2, int link)
+{
+   double output;
+   calcVelocity(theta2, omega2);
+
+   switch(link)
+{
+    case LINK_1:
+        output = m_omega[1];
+        break;
+    case LINK_2:
+        output = m_omega[2];
+        break;
+    case LINK_3:
+        output = m_omega[3];
+        break;
+    case LINK_4:
+        output = m_omega[4];
+        break;
+    case LINK_5:
+        output = m_omega[5];
+        break;
+}
+   return output;
+}
+
+/***************************************************************
+ * calcAccel()
+ ***************************************************************/
+void CMechanism::calcAccel(double theta2, omega2, alpha2)
+{
+    double x1, x2;
+    double a,b,c,d,e;
+    m_theta[2] = theta2;
+    m_omega[2] = omega2;
+    m_alpha[2] = alpha2;
+
+    a = -m_r[2]*m_alpha[2]*sin(m_theta[4]-m_theta[2]);
+    b =  m_r[2]*m_omega[2]*m_omega[2]*cos(m_theta[4]-m_theta[2]);
+    c =  m_r[3]*m_omega[3]*m_omega[3]*cos(m_theta[4]-m_theta[3]);
+    d = -m_r[4]*m_omega[4]*m_omega[4];
+    e =  m_r[3]*sin(m_theta[4]-m_theta[3]);
+    m_alpha[3] = (a+b+c+d)/e;
+   
+    a =  m_r[2]*m_alpha[2]*sin(m_theta[3]-m_theta[2]);
+    b = -m_r[2]*m_omega[2]*m_omega[2]*cos(m_theta[3]-m_theta[2]);
+    c =  m_r[4]*m_omega[4]*m_omega[4]*cos(m_theta[3]-m_theta[4]);
+    d = -m_r[3]*m_omega[3]*m_omega[3];
+    e =  m_r[4]*sin(m_theta[3]-m_theta[4]);
+    m_alpha[4] = (a+b+c+d)/e;
+    
+    complexsolvePP(M_PI/2, m_theta[5], (polar(m_r[4]*m_alpha[4],m_theta[4]) + polar(m_r[4]*m_omega[4]*m_omega[4],m_theta[4]) + polar(m_r[5]*m_omega[5]*m_omega[5],m_theta[5])),x1, x2);
+    Ca = x1;
+    m_alpha[5] = x2/m_r[5];
+    
+}
+
+/*****************************************************************
+ * AngAccel()
+ *****************************************************************/
+double CMechanism::AngAccel(double theta2, omega2, alpha2, int link)
+{
+   double output;
+   calcAccel(theta2, omega2, alpha2);
+
+   switch(link)
+{
+    case LINK_1:
+        output = m_alpha[1];
+        break;
+    case LINK_2:
+        output = m_alpha[2];
+        break;
+    case LINK_3:
+        output = m_alpha[3];
+        break;
+    case LINK_4:
+        output = m_alpha[4];
+        break;
+    case LINK_5:
+        output = m_alpha[5];
+        break;
+}
+   return output;
+}
+
+/*****************************************************************
+ * Point()
+ *****************************************************************/
+double complex CMechanism::Point(double theta2, omega2, alpha2, int prop, link)
+{
+
+
+switch(prop)
+{
+    case POS:
+    switch(link)
+    {
+    case POINT_B:
+        return Bp;
+        break;
+    case POINT_C:
+        return Cp; 
+        break;
+    case POINT_P:
+        return Pp;
+        break;
+    break;
+    }
+    
+    case VEL:
+    switch(link)
+    {
+    case POINT_B:
+        return Bv;
+        break;
+    case POINT_C:
+        return Cv; 
+        break;
+    case POINT_P:
+        return Pv;
+        break;
+    break;
+    }
+    
+    case ACCEL:
+    switch(link)
+    {
+    case POINT_B:
+        return Ba;
+        break;
+    case POINT_C:
+        return Ca; 
+        break;
+    case POINT_P:
+        return Pa;
+        break;
+    break;
+    }
+}
+
+}
