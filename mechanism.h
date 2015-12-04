@@ -47,7 +47,7 @@ class CMechanism
         double complex Bv, Cv, Pv;
         double complex Ba, Ca, Pa;
 
-        CPlot positionPlot;
+        // class CPlot positionPlot;
 
     
         // Private function members 
@@ -73,7 +73,7 @@ class CMechanism
         double AngVelocity(double theta2, omega2, int link);
         double AngAccel(double theta2, omega2, alpha2, int link);
         double complex Point(double theta2, omega2, alpha2, int prop, link);
-        void plotSliderPos();
+        void plotSliderPos(CPlot *positionPlot);
     
 
 };

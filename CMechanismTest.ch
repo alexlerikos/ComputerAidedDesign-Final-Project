@@ -5,6 +5,7 @@
 int main()
 {
    class CMechanism cm;
+   class CPlot posPlot;
    double output;
 
    bool unit = SI;
@@ -59,7 +60,7 @@ int main()
     printf("Point C = %f \n", cm.Point(theta2, omega2, alpha2, ACCEL, POINT_C));
     printf("Point P = %f \n\n", cm.Point(theta2, omega2, alpha2, ACCEL, POINT_P));
     
-    cm.plotSliderPos();
+    cm.plotSliderPos(&posPlot);
 
     printf("Done!\n");
 

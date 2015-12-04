@@ -303,12 +303,14 @@ double complex CMechanism::Point(double theta2, omega2, alpha2, int prop, link)
  * plotSliderPosition()
  *****************************************************************/
 
-void CMechanism::plotSliderPos()
+void CMechanism::plotSliderPos(CPlot *positionPlot)
 {
     
     // Set up driving angle theta2
     double theta2[360], theta2_u[360];
     double complex points[360];
+    double pointsY[360];
+    
 
     int i;
 
@@ -317,16 +319,17 @@ void CMechanism::plotSliderPos()
         theta2[i] = i;
         calcPosition(M_DEG2RAD(i));
         points[i] = Point(M_DEG2RAD(i), m_omega[2], m_alpha[2], POS, POINT_C);
-        printf("points[i]: %f\n",points[i]);  
+        printf("points[i]: %f\n",points[i]); 
+        pointsY[i] = cimag(points[i]); 
 
     }
-    unwrap(theta2_u, theta2);
-    positionPlot.title("Slider Vertical Position");            // title
-    positionPlot.label(PLOT_AXIS_X,"theta 2 (deg)");               // x-label
-    positionPlot.label(PLOT_AXIS_Y,"Slider Position (cm)");  // y-label
-    positionPlot.data2D(theta2, points);                        // plotting data
-
-    positionPlot.plotting();
+    // unwrap(theta2_u, theta2);
+    // printf(theta2_u[0]);
+    (*positionPlot).title("Slider Vertical Position");            // title
+    (*positionPlot).label(PLOT_AXIS_X,"theta 2 (deg)");               // x-label
+    (*positionPlot).label(PLOT_AXIS_Y,"Slider Position (cm)");  // y-label
+    (*positionPlot).data2D(theta2, pointsY);                        // plotting data
+    (*positionPlot).plotting();
 
 
 }
