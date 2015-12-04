@@ -148,7 +148,9 @@ void CMechanism::calcVelocity(double theta2, omega2)
     complexsolvePP(M_PI/2, m_theta[5], polar(m_r[4]*m_omega[4],m_theta[4]), x1, x2);
     Cv = x1;
     m_omega[5] = x2/m_r[5];
-
+    
+    Pv = (I*m_omega[2]* polar(m_r[2],m_theta[2]) + I*m_omega[3]*polar(m_rp,(m_theta[3] + m_beta)));
+    Bv = (I*m_omega[2]* polar(m_r[2],m_theta[2]) + I*m_omega[3]*polar(m_r[3],(m_theta[3])));
 }
 
 /*****************************************************************
@@ -209,6 +211,8 @@ void CMechanism::calcAccel(double theta2, omega2, alpha2)
     Ca = x1;
     m_alpha[5] = x2/m_r[5];
     
+    Pa = (I*m_alpha[2]-m_omega[2]*m_omega[2])*polar(m_r[2],m_theta[2]) + (I*m_alpha[3]-m_omega[3]*m_omega[3])*polar(m_rp,(m_theta[3]+m_beta));  
+    Ba = (I*m_alpha[2]-m_omega[2]*m_omega[2])*polar(m_r[2],m_theta[2]) + (I*m_alpha[3]-m_omega[3]*m_omega[3])*polar(m_r[3],(m_theta[3]));      
 }
 
 /*****************************************************************
@@ -293,6 +297,7 @@ switch(prop)
         break;
     break;
     }
+    return 0;
 }
 
 }
