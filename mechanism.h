@@ -46,12 +46,17 @@ class CMechanism
         double complex Bp, Cp, Pp;
         double complex Bv, Cv, Pv;
         double complex Ba, Ca, Pa;
+
+        // class CPlot positionPlot;
+
     
         // Private function members 
         void m_initialize(void);              // initialize private members
         void calcPosition(double theta2);     // calc. ang. pos. and m_r9
         void calcVelocity(double theta2, omega2);
         void calcAccel(double theta2, omega2, alpha2);
+
+
 
 
     public:
@@ -68,6 +73,7 @@ class CMechanism
         double AngVelocity(double theta2, omega2, int link);
         double AngAccel(double theta2, omega2, alpha2, int link);
         double complex Point(double theta2, omega2, alpha2, int prop, link);
+        void plotSliderPos(CPlot *positionPlot);
     
 
 };
