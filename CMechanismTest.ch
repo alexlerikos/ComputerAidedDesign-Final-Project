@@ -61,7 +61,8 @@ int main()
     printf("Point P = %f \n\n", cm.Point(theta2, omega2, alpha2, ACCEL, POINT_P));
     
     cm.plotSliderPos(&posPlot);
-    
+    cm.plotSliderVel(&velPlot);
+
 
     printf("Done!\n");
 

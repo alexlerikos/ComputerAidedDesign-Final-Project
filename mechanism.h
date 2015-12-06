@@ -73,6 +73,7 @@ class CMechanism
         double AngAccel(double theta2, omega2, alpha2, int link);
         double complex Point(double theta2, omega2, alpha2, int prop, link);
         void plotSliderPos(CPlot *positionPlot);
+        void plotSliderVel(CPlot *velocityPlot);
     
 
 };
