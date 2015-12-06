@@ -37,8 +37,8 @@ class CMechanism
         // Private data members
         bool m_uscunit;          // unit choice
 
-        double m_r[1:8];         // lengths of links
-        double m_theta[1:8];     // phase angles for the links
+        double m_r[1:8];         // lengths of links in cm
+        double m_theta[1:8];     // phase angles for the links in degrees
         double m_omega[1:8];
         double m_alpha[1:8];
 
@@ -74,6 +74,7 @@ class CMechanism
         double complex Point(double theta2, omega2, alpha2, int prop, link);
         void plotSliderPos(CPlot *positionPlot);
         void plotSliderVel(CPlot *velocityPlot);
+        void animate();
     
 
 };

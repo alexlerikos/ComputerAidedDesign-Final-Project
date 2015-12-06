@@ -62,6 +62,7 @@ int main()
     
     cm.plotSliderPos(&posPlot);
     cm.plotSliderVel(&velPlot);
+    cm.animate();
 
 
     printf("Done!\n");
