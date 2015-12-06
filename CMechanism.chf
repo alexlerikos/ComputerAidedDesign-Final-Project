@@ -53,13 +53,13 @@ void CMechanism::setLinks(double r1, r2, r3, r4, r5, r7, rp, theta1, beta)
 
     if(m_uscunit)
     {
-        m_r[1] *= M_FT2M;     // ft --> m
-        m_r[2] *= M_FT2M;     // ft --> m
-        m_r[3] *= M_FT2M;     // ft --> m
-        m_r[4] *= M_FT2M;     // ft --> m
-        m_r[5] *= M_FT2M;     // ft --> m
-        m_r[7] *= M_FT2M;     // ft --> m
-        m_rp *= M_FT2M;       // ft --> m
+        m_r[1] *= 0.3048;    // m --> ft
+        m_r[2] *= 0.3048;    // m --> ft
+        m_r[3] *= 0.3048;    // m --> ft
+        m_r[4] *= 0.3048;    // m --> ft
+        m_r[5] *= 0.3048;    // m --> ft
+        m_r[7] *= 0.3048;    // m --> ft
+        m_rp *= 0.3048;      // m --> ft
     }
 }
 
@@ -101,6 +101,16 @@ void CMechanism::calcPosition(double theta2)
     Pp = polar(m_r[2], m_theta[2]) + polar(m_rp, m_theta[3] + m_beta);
     Bp = polar(m_r[2], m_theta[2]) + polar(m_r[3], m_theta[3]);
     Cp = polar(m_r[1], m_theta[1]) + polar(m_r[7], 0) + polar(m_r[8], M_PI/2);
+        
+    if(m_uscunit)
+    {
+        Pp *= 0.3048;     // m --> ft
+        Bp *= 0.3048;     // m --> ft
+        Cp *= 0.3048;     // m --> ft
+
+    }
+    
+    
 }
 
 /*****************************************************************
@@ -151,6 +161,14 @@ void CMechanism::calcVelocity(double theta2, omega2)
     
     Pv = (I*m_omega[2]* polar(m_r[2],m_theta[2]) + I*m_omega[3]*polar(m_rp,(m_theta[3] + m_beta)));
     Bv = (I*m_omega[2]* polar(m_r[2],m_theta[2]) + I*m_omega[3]*polar(m_r[3],(m_theta[3])));
+      
+    if(m_uscunit)
+    {
+        Pv *= 0.3048;    // m --> ft
+        Bv *= 0.3048;    // m --> ft
+        Cv *= 0.3048;     // m --> ft
+
+    }
 }
 
 /*****************************************************************
@@ -212,7 +230,15 @@ void CMechanism::calcAccel(double theta2, omega2, alpha2)
     m_alpha[5] = x2/m_r[5];
     
     Pa = (I*m_alpha[2]-m_omega[2]*m_omega[2])*polar(m_r[2],m_theta[2]) + (I*m_alpha[3]-m_omega[3]*m_omega[3])*polar(m_rp,(m_theta[3]+m_beta));  
-    Ba = (I*m_alpha[2]-m_omega[2]*m_omega[2])*polar(m_r[2],m_theta[2]) + (I*m_alpha[3]-m_omega[3]*m_omega[3])*polar(m_r[3],(m_theta[3]));      
+    Ba = (I*m_alpha[2]-m_omega[2]*m_omega[2])*polar(m_r[2],m_theta[2]) + (I*m_alpha[3]-m_omega[3]*m_omega[3])*polar(m_r[3],(m_theta[3]));  
+
+    if(m_uscunit)
+    {
+        Pa *= 0.3048;     // m --> ft
+        Ba *= 0.3048;     // m --> ft
+        Ca *= 0.3048;     // m --> ft
+
+    }
 }
 
 /*****************************************************************
