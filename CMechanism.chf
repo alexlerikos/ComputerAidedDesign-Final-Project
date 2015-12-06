@@ -147,7 +147,7 @@ void CMechanism::calcVelocity(double theta2, omega2)
     
     complexsolvePP(M_PI/2, m_theta[5], polar(m_r[4]*m_omega[4],m_theta[4]), x1, x2);
     Cv = x1;
-    m_omega[5] = x2/m_r[5];
+    m_omega[5] = -x2/m_r[5];
     
     Pv = (I*m_omega[2]* polar(m_r[2],m_theta[2]) + I*m_omega[3]*polar(m_rp,(m_theta[3] + m_beta)));
     Bv = (I*m_omega[2]* polar(m_r[2],m_theta[2]) + I*m_omega[3]*polar(m_r[3],(m_theta[3])));
