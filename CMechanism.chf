@@ -327,10 +327,7 @@ void CMechanism::plotSliderPos(CPlot *positionPlot)
         pointsY[i] = cimag(points[i]); 
 
     }
-<<<<<<< HEAD
-    return 0;
-}
-=======
+
     // unwrap(theta2_u, theta2);
     // printf(theta2_u[0]);
     (*positionPlot).title("Slider Vertical Position");            // title
@@ -339,7 +336,6 @@ void CMechanism::plotSliderPos(CPlot *positionPlot)
     (*positionPlot).data2D(theta2, pointsY);                        // plotting data
     (*positionPlot).plotting();
 
->>>>>>> origin/master
 
 }
 

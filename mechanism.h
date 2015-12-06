@@ -47,7 +47,6 @@ class CMechanism
         double complex Bv, Cv, Pv;
         double complex Ba, Ca, Pa;
 
-        // class CPlot positionPlot;
 
     
         // Private function members 
