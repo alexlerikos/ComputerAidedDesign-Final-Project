@@ -355,7 +355,12 @@ void CMechanism::plotSliderPos(CPlot *positionPlot)
 
     (*positionPlot).title("Slider Vertical Position");            // title
     (*positionPlot).label(PLOT_AXIS_X,"theta 2 (deg)");               // x-label
-    (*positionPlot).label(PLOT_AXIS_Y,"Slider Position (cm)");  // y-label
+    if (m_uscunit) { //SI
+        (*positionPlot).label(PLOT_AXIS_Y,"Slider Positionn (cm)");  // y-label
+    }
+    else{
+        (*positionPlot).label(PLOT_AXIS_Y,"Slider Position (in)");  // y-label
+    }
     (*positionPlot).data2D(theta2, pointsY);                        // plotting data
     (*positionPlot).plotting();
 
@@ -388,7 +393,12 @@ void CMechanism::plotSliderVel(CPlot *velocityPlot)
 
     (*velocityPlot).title("Slider Vertical Velocity");            // title
     (*velocityPlot).label(PLOT_AXIS_X,"theta 2 (deg)");               // x-label
-    (*velocityPlot).label(PLOT_AXIS_Y,"Slider velocity (cm/s)");  // y-label
+    if (m_uscunit) { //SI
+        (*velocityPlot).label(PLOT_AXIS_Y,"Slider Velocity (cm/s)");  // y-label
+    }
+    else{
+        (*velocityPlot).label(PLOT_AXIS_Y,"Slider Velocity (in/s)");  // y-label
+    }
     (*velocityPlot).data2D(theta2, pointsY);                        // plotting data
     (*velocityPlot).plotting();
 
